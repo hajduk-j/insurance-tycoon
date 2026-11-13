@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Insurance Tycoon</title>
+<!--
+  Third-party assets:
+  - UI frames, buttons, bars, slot and cursors: RPGUI by Ronen Ness (zlib licence), graphics by Buch / Michele Bucelli (public domain).
+  - Icons: Pixelarticons, Copyright (c) 2019 Gerrit Halfmann, MIT License.
+  - Fonts: Pixelify Sans (Copyright 2021 The Pixelify Sans Project Authors) and Press Start 2P (Copyright 2012 The Press Start 2P Project Authors), SIL Open Font License 1.1.
+-->
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="pf" class="unit pn">
+  <div class="porw pg"><canvas class="por" id="pp" width="12" height="12"></canvas></div>
+  <div class="body">
+    <div class="nm" id="pname">Ty</div>
+    <div class="sub" id="ptitle"></div>
+    <div class="bar" id="mana"><i></i><b></b></div>
+  </div>
+  <div class="porw pg" id="plw"><canvas class="por" id="pl" width="12" height="12"></canvas></div>
+</div>
+<div id="stats"></div>
+<div id="tf" class="unit pn">
+  <div class="porw pg"><canvas class="por" id="tp" width="12" height="12"></canvas></div>
+  <div class="body">
+    <div class="nm" id="tname"></div>
+    <div class="sub" id="ttype"></div>
+    <div class="bar green" id="trust"><i></i><b></b></div>
+    <div class="thin" id="rtrust"><i style="background:#e0483a"></i></div>
+    <div class="thin" id="ptrust"><i style="background:#b040ff"></i></div>
+  </div>
+</div>
+
+<div id="side">
+  <div class="pg"><canvas id="mini" width="144" height="104"></canvas></div>
+  <div id="lb" class="pn"></div>
+  <div id="req" class="pn"></div>
+  <div id="quest"></div>
+  <div id="orgbtn" class="btn" data-ic="users" data-s="12"> ŠTRUKTÚRA (O)</div>
+  <div id="bbbtn" class="btn"></div>
+</div>
+
+<div id="acadbtn" class="btn"></div>
+<div id="end" class="veil"><div class="dlg"><h2 id="endt"></h2><div id="endd"></div><button id="endb" class="btn">HRAŤ ĎALEJ</button><button id="endn" class="btn">NOVÁ HRA</button></div></div>
+<div id="tree" class="veil"><div class="win pn">
+  <div class="wh"><h3>ŠTRUKTÚRA</h3><div id="ttabs"></div><div id="tclose" class="btn">X</div></div>
+  <div id="tview"><div id="tin"></div></div>
+  <div id="tfoot"><span id="tsum"></span><div id="tcareer" class="btn">KARIÉRNY STROM</div></div>
+</div></div>
+<div id="career" class="veil"><div class="dlg"><div class="wh"><h2 style="flex:1;margin:0">KARIÉRNY STROM</h2><button id="cclose" class="btn">X</button></div><div id="cbody"></div></div></div>
+<div id="warn"></div>
+<div id="scare"><div id="sct"></div><div id="scs"></div></div>
+<div id="chat"></div>
+<div id="err"></div>
+<div id="lvl"></div>
+
+<div id="bars">
+  <div id="tip"></div>
+  <div id="cast" class="bar gold"><i></i><b></b></div>
+  <div id="ab" class="pn"></div>
+  <div id="xp" class="bar purple"><i></i><b></b></div>
+</div>
+
+<div id="start" class="veil"><div class="dlg">
+  <div class="stp" data-s="0">
+    <h1>INSURANCE TYCOON</h1>
+    <div class="tag">Vymyslená paródia. Akákoľvek podobnosť so skutočnosťou je čisto náhodná.</div>
+    <div class="hr"></div>
+    <div class="lead">Staň sa poisťovacím agentom, vybuduj si cech a predbehni konkurenciu.</div>
+    <div class="brow col"><button id="snew" class="btn">NOVÁ HRA</button><button id="quick" class="btn"></button><button id="careerbtn" class="btn cbtn">KARIÉRNY STROM</button></div>
+    <div class="fine">UI: RPGUI (grafika Buch) · ikony: Pixelarticons · písma: Pixelify Sans, Press Start 2P</div>
+  </div>
+  <div class="stp" data-s="1">
+    <h2 class="sh">TVOJA POSTAVA</h2>
+    <label>Meno agenta<input id="agname" maxlength="16" spellcheck="false"></label>
+    <div class="pwrap"><canvas id="cprev" width="16" height="20"></canvas><div id="copts"></div></div>
+  </div>
+  <div class="stp" data-s="2">
+    <h2 class="sh">TVOJA FIRMA</h2>
+    <label>Názov firmy<input id="coname" maxlength="20" spellcheck="false"></label>
+    <div class="row"><span>Firemná farba</span><div id="cocol" class="sws"></div></div>
+    <div class="row"><span>Logo</span><div id="lpal" class="sws"></div></div>
+    <div class="lwrap"><div id="lgrid"></div><div class="lside"><canvas id="lprev" width="12" height="12"></canvas><div id="lpre"></div></div></div>
+    <div class="fine">Klikni alebo ťahaj po mriežke. Logo bude na billboardoch a v HUD, firemnú farbu nosí celý cech.</div>
+  </div>
+  <div class="stp" data-s="3">
+    <h2 class="sh">POHYB A KLIENTI</h2>
+    <div class="how big">
+      <span class="key">WASD</span><span>Pohyb. Funguje aj klik alebo ťuknutie na zem.</span>
+      <span class="key">TAB</span><span>Výber klienta. Alebo naňho klikni.</span>
+      <span class="key" data-ic="coins" data-s="14"></span><span>Nad klientom je lišta dôvery. Pri 100 % ho môžeš podpísať a zarobíš províziu.</span>
+      <span class="key" data-ic="coffee" data-s="14"></span><span>Kávu dopĺňaš v kaviarni (najviac 3 naraz). Je to najsilnejšie kúzlo.</span>
+    </div>
+  </div>
+  <div class="stp" data-s="4">
+    <h2 class="sh">KÚZLA</h2>
+    <div class="how big">
+      <span class="key" data-ic="coffee" data-s="14">1</span><span><b>Kávička</b> – najviac dôvery, ale musíš stáť pri klientovi.</span>
+      <span class="key" data-ic="message-text" data-s="14">2</span><span><b>Sľub</b> – aj z diaľky, stojí charizmu.</span>
+      <span class="key" data-ic="contact" data-s="14">3</span><span><b>Vizitka</b> – rýchla drobnosť.</span>
+      <span class="key" data-ic="script" data-s="14">4</span><span><b>Zmluva</b> – pri 100 % dôvere podpíš.</span>
+      <span class="key" data-ic="user-plus" data-s="14">5</span><span><b>Nábor</b> – namiesto zmluvy prijmi klienta do cechu.</span>
+    </div>
+  </div>
+  <div class="stp" data-s="5">
+    <h2 class="sh">CECH A AKADÉMIA</h2>
+    <div class="how big">
+      <span class="key" data-ic="user-plus" data-s="14"></span><span>Nový člen poisťuje sám a ty berieš podiel z jeho zmlúv. Nováčikovi najprv pomôž kúzlom, inak odíde.</span>
+      <span class="key" data-ic="users" data-s="14">O</span><span><b>Štruktúra</b> – okno s celým tvojím cechom.</span>
+      <span class="key" data-ic="teach" data-s="14">E</span><span><b>Akadémia</b> – kúp kurz, celý cech sa zbehne na školenie a potom poisťuje rýchlejšie.</span>
+    </div>
+  </div>
+  <div class="stp" data-s="6">
+    <h2 class="sh">KANCELÁRIA A BILLBOARD</h2>
+    <div class="how big">
+      <span class="key" data-ic="zap" data-s="14"></span><span><b>Kancelária</b> – pri dverách svojej firmy dobíjaš charizmu 6× rýchlejšie.</span>
+      <span class="key" data-ic="billboard" data-s="14">B</span><span><b>Billboard</b> – postav reklamu so svojím logom a tvárou. Ľudia v jej okolí sa presviedčajú sami, ty len prídeš po podpis.</span>
+    </div>
+  </div>
+  <div class="stp" data-s="7">
+    <h2 class="sh">CIEĽ HRY</h2>
+    <div class="goal"><b>Ako prvý dosiahni level 5.</b> Level nie je za skúsenosti, ale za príjem a za ľudí, ktorých máš pod sebou. Čo presne treba na ktorý level, nájdeš v kariérnom strome.</div>
+    <div class="hr"></div>
+    <div class="goal"><b>Pozor na paralelitu.</b> Keď sa tvoj človek dotiahne na tvoj level, máš 60 sekúnd na postup. Inak sa odtrhne aj so svojimi ľuďmi a hra blikne a zaznie hlasný zvuk.</div>
+    <div class="brow" style="margin-top:12px"><button class="btn cbtn">KARIÉRNY STROM</button></div>
+  </div>
+  <div id="sdots"></div>
+  <div id="snav" class="brow"><button id="sback" class="btn">SPÄŤ</button><button id="sskip" class="btn">PRESKOČIŤ</button><button id="snext" class="btn">ĎALEJ</button></div>
+</div></div>
+
+<script src="js/game.js"></script>
+</body>
+</html>
