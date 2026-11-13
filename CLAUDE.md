@@ -1,6 +1,6 @@
 # Insurance Tycoon
 
-Top-down pixel-art parody of an MMORPG, played in the browser. You are an insurance agent:
+Top-down pixel-art parody game about insurance sales, played in the browser. You are an insurance agent:
 you persuade clients (trust meter) with "spells" (coffee, promises, business cards), sign
 contracts, recruit clients into your guild and build a multi-level structure. A rival team
 and break-away parts of your own guild race you to level 5. Tycoon layer: you name your company,
