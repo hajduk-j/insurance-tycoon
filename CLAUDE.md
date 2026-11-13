@@ -25,6 +25,7 @@ Opening `index.html` directly from disk also works in Chrome.
 | `css/style.css` | All UI styling. Nine-slice frames, bars, slots and buttons come from images in `assets/ui/`. |
 | `css/fonts.css` | `@font-face` rules for the bundled fonts. |
 | `js/game.js` | The whole game (about 800 lines, one IIFE). Sections are marked `// ---------- name ----------`. |
+| `favicon.svg`, `favicon.png` | Tab icon: the default shield logo, drawn by us (12×12 pixels). |
 | `assets/ui/` | UI kit images (RPGUI). |
 | `assets/fonts/` | Pixelify Sans (body) and Press Start 2P (headings), latin + latin-ext subsets. |
 | `tools/smoke.py` | Headless smoke test + screenshots (also drives the creator, the office and a billboard). |
